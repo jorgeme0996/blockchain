@@ -25,7 +25,7 @@ app.get('/test', (req, res)=> {
     const GodEyes = trackIp(ipInfo)
     console.log(ipInfo, GodEyes);
 
-    res.json({GodEyes})
+    res.json({ipInfo, GodEyes})
 })
 
 app.get('/blockchain', (req, res)=> {
