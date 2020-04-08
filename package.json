@@ -6,7 +6,11 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js",
-    "dev": "nodemon --watch dev -e js index.js"
+    "node_1": "nodemon index.js 3000",
+    "node_2": "nodemon index.js 3001",
+    "node_3": "nodemon index.js 3002",
+    "node_4": "nodemon index.js 3003",
+    "node_4": "nodemon index.js 3004"
   },
   "author": "Jorge Mtz",
   "license": "MIT",

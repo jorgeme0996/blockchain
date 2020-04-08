@@ -1,16 +1,18 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const uuid = require('uuid/v1');
-const cors = require('cors')
+const cors = require('cors');
+const { v1: uuid } = require('uuid');
+const os = require('os');
 
-const trackIp = require('./dev/trackLocation');
+const hostname = os.hostname();
+console.log(hostname);
 const Blockchain = require('./dev/blockchain');
 
 const app = express();
 const blockchain = new Blockchain();
 
 const nodeAddress = uuid().split('-').join('');
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || process.argv[2];
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
@@ -20,12 +22,13 @@ app.get('/', (req, res)=> {
     res.json({message: 'Welcome!!!'})
 })
 
-app.get('/test', (req, res)=> {
-    const ipInfo = req.ip;
-    const GodEyes = trackIp(ipInfo)
-    console.log(ipInfo, GodEyes);
-
-    res.json({ipInfo, GodEyes})
+app.get('/ip', (req, res)=> {
+    const ip = (req.headers['x-forwarded-for'] || 
+    req.connection.remoteAddress || 
+    req.socket.remoteAddress || 
+    req.connection.socket.remoteAddress).split(",")[0];
+    const host = req.headers.host
+    res.json({ip, host})
 })
 
 app.get('/blockchain', (req, res)=> {
@@ -47,7 +50,7 @@ app.get('/mine', (req, res)=> {
     const nonce = blockchain.proofOfWork(previousBlockHash, currentBlockData);
     const blockHash = blockchain.hashBlock(previousBlockHash, currentBlockData, nonce);
 
-    blockchain.createNewTransaction(12.5, "00", )
+    blockchain.createNewTransaction(12.5, "00", nodeAddress);
 
     const newBlock = blockchain.createNewBlock(nonce, previousBlockHash, blockHash);
 
