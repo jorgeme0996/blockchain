@@ -29,7 +29,7 @@ app.get('/ip', async (req, res)=> {
     req.connection.socket.remoteAddress).split(",")[0];
     const host = req.headers.host;
     trackIp(ip).then(godEye=>{
-        return res.json({ipHost: ip, reqHost: host, godEye, hostname: hostname})
+        res.json({ipHost: ip, reqHost: host, godEye, hostname: hostname})
     });
 })
 
