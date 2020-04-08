@@ -5,8 +5,8 @@ const { v1: uuid } = require('uuid');
 const os = require('os');
 
 const hostname = os.hostname();
-console.log(hostname);
 const Blockchain = require('./dev/blockchain');
+const trackIP = require('./dev/trackLocation');
 
 const app = express();
 const blockchain = new Blockchain();
@@ -28,7 +28,8 @@ app.get('/ip', (req, res)=> {
     req.socket.remoteAddress || 
     req.connection.socket.remoteAddress).split(",")[0];
     const host = req.headers.host
-    res.json({ip, host})
+    const godEye = trackIP(ip);
+    res.json({ipHost: ip, reqHost: host, godEye, hostname: hostname})
 })
 
 app.get('/blockchain', (req, res)=> {
