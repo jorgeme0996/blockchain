@@ -1,9 +1,10 @@
 const request = require('request');
 
-const URL = "https://www.ipapi.co/";
+const URL = "https://www.ipapi.co";
 
 const trackIp = (ip) => {
     const urlToRequest = `${URL}/${ip}/json`;
+    console.log(urlToRequest);
     request({
         url: urlToRequest,
         json: true
