@@ -28,12 +28,12 @@ app.get('/ip', async (req, res)=> {
     req.socket.remoteAddress || 
     req.connection.socket.remoteAddress).split(",")[0];
     const host = req.headers.host;
-    let godEye;
     trackIp(ip).then(data => {
-        godEye = data
-        return res.json({ipHost: ip, reqHost: host, godEye, hostname: hostname})
+        return res.json({ipHost: ip, reqHost: host, godEye: data, hostname: hostname})
     }).catch(err => {
         return res.json({err})
+    }).finally(()=>{
+        return res.json({message: 'chosse finally'})
     });
 })
 
