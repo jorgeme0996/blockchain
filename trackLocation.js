@@ -2,20 +2,18 @@ const request = require('request');
 
 const URL = "https://www.ipapi.co";
 
-const trackIp = (ip) => {
+exports.trackIp = async (ip) => {
     const urlToRequest = `${URL}/${ip}/json`;
-    console.log(urlToRequest);
-    request({
-        url: urlToRequest,
-        json: true
-    }, (err, response, body)=> {
-        if(!err && response.statusCode == 200) {
-            return {status: true, body }
-        } else {
-            return {statu: false, error: err }
-        } 
-
+    return new Promise((resolve, reject)=>{
+        request({
+            url: urlToRequest,
+            json: true
+        }, (err, response, body) => {
+            if(!err && response.statusCode == 200) {
+                resolve(body) 
+            } else {
+                reject(err)
+            }
+        })
     })
 }
-
-module.exports = trackIp;

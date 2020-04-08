@@ -6,7 +6,7 @@ const os = require('os');
 
 const hostname = os.hostname();
 const Blockchain = require('./dev/blockchain');
-const trackIP = require('./dev/trackLocation');
+const { trackIp } = require('./dev/trackLocation');
 
 const app = express();
 const blockchain = new Blockchain();
@@ -22,23 +22,24 @@ app.get('/', (req, res)=> {
     res.json({message: 'Welcome!!!'})
 })
 
-app.get('/ip', (req, res)=> {
-    const ip = (req.headers['x-forwarded-for'] || 
+app.get('/ip', async (req, res)=> {
+    const ip = await (req.headers['x-forwarded-for'] || 
     req.connection.remoteAddress || 
     req.socket.remoteAddress || 
     req.connection.socket.remoteAddress).split(",")[0];
-    const host = req.headers.host
-    const godEye = trackIP(ip);
-    res.json({ipHost: ip, reqHost: host, godEye, hostname: hostname})
+    const host = req.headers.host;
+    trackIp(ip).then(godEye=>{
+        return res.json({ipHost: ip, reqHost: host, godEye, hostname: hostname})
+    });
 })
 
 app.get('/blockchain', (req, res)=> {
-    res.json(blockchain);
+    return res.json(blockchain);
 })
 
 app.post('/transaction', async(req, res)=> {
     const blockIndex = await blockchain.createNewTransaction(req.body.amount, req.body.sender, req.body.recipient);
-    res.json({blockIndex})
+    return res.json({blockIndex})
 })
 
 app.get('/mine', (req, res)=> {
